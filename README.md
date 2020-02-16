@@ -9,6 +9,18 @@ brew update
 brew install terraform
 ```
 
+### packerをインストール
+
+```sh
+brew install packer
+```
+
+### ansibleをインストール
+
+```sh
+brew install ansible
+```
+
 ### AWS CLIを使用するための設定
 
 ```sh
@@ -43,9 +55,8 @@ Warning! It is highly recommended that you enable Bucket Versioning on the S3 bu
 ``
 
 ### 必要なElastic IPをコンソールで取得
-terraform上でElastic IPを取得することも可能だが、環境を作り直すたびに変更されてしまう。  
-IDVではLDAP等アクセス元IPを判別して処理するものがインフラの中に含まれており、  
-毎回変わってしまっては手続きの手間が発生するため、  
+terraform上でElastic IPを取得することも可能だが、環境を作り直すたびに変更されてしまう。    
+構築のたびに毎回変わってしまわぬように、  
 コンソールで取得し、取得したIPを紐付ける形で構築する。
 
 ### EC2インスタンス生成時に紐付けるキーペアをコンソールで取得
@@ -55,6 +66,17 @@ IDVではLDAP等アクセス元IPを判別して処理するものがインフ�
 環境別に生成したパスワードを書くインスタンスで使用するため、コンソールで登録し、登録したキーを使ってデータ参照する形でパスワードを設定する。  
 パスワードをgitで管理しないようにするため。  
 名称は決まったルールに則って指定する（moduleファイル参照）
+
+## AMI作成実行コマンド
+
+```sh
+## パスは適宜変更
+cd 【プロジェクトディレクトリパス】/packer/dev
+## 実行準備
+packer validate 【packer用jsonファイル名】
+## 実行
+packer build 【packer用jsonファイル名】
+```
 
 ## 環境構築実行コマンド
 

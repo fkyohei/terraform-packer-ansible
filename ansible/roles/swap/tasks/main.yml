@@ -1,0 +1,37 @@
+---
+# swap割り当て設定
+
+# ディレクトリ作成
+- name: create swap directory
+  file: path=/swap
+        state=directory
+        owner=root
+        group=root
+        mode=0755
+
+# 割り当て（環境別）
+- name: allocate swap
+  shell: dd if=/dev/zero of=/swap/swapfile bs=1M count=1K
+  when: env_name == "dev"
+
+# 権限付与
+- name: change swap file permission
+  file:
+    path: /swap/swapfile
+    mode: '0600'
+
+# swap作成
+- name: create swap
+  shell: mkswap /swap/swapfile
+
+# swap有効化
+- name: swap on
+  shell: swapon /swap/swapfile
+
+# 再起動時の反映
+- name: copy fstab original file
+  shell: cp -p /etc/fstab /etc/fstab.ORG
+
+- name: set swap for restart
+  shell: echo "/swap/swapfile swap     swap    defaults        0   0" >> /etc/fstab
+  

@@ -1,0 +1,13 @@
+---
+# WEBサーバ用AMIを構築する
+- hosts: all
+  become: true
+  vars:
+    server_type: web
+  vars_files:
+    - vars/web.yml
+
+  roles:
+    - common
+    - swap
+# AND DO SOMETHING

@@ -1,0 +1,35 @@
+---
+# 全サーバ共通の基本設定
+
+# 全パッケージを最新版に更新
+- name: upgrade all packages
+  yum: name=*
+       state=latest
+
+# プロンプトの書式設定
+- name: set the prompt format
+  lineinfile: dest=/etc/bashrc
+              line={{ 'PS1="[\[\e[36m\]\u \[\e[33m\]@$NICKNAME \[\e[32m\]@\h \[\e[35m\]\W\[\e[0m\]]\\$ "' }}
+              create=yes
+
+# プロンプト表示用の環境変数を設定
+- name: set nickname for the prompt
+  lineinfile: dest=/etc/profile.d/prompt.sh
+              line="export NICKNAME={{ server_name }}"
+              create=yes
+
+# シェルウィンドウのタイトルを設定
+- name: set shell window title
+  lineinfile: dest=/etc/sysconfig/bash-prompt-xterm
+              line="{{ 'echo -ne "\033]0;${USER}@${NICKNAME}@${HOSTNAME}:${PWD/#$HOME/~}\007"' }}"
+              create=yes
+              mode='+x'
+
+# タイムゾーン変更
+- name: set timezone
+  shell: timedatectl set-timezone Asia/Tokyo
+
+# MOTD設定
+- name: set motd
+  copy: src=30-banner.txt
+        dest=/etc/update-motd.d/30-banner

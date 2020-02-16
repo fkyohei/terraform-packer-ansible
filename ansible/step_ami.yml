@@ -1,0 +1,13 @@
+---
+# STEPサーバ用AMIを構築する
+- hosts: all
+  become: true
+  vars:
+    server_type: step
+  vars_files:
+    - vars/step.yml
+
+  roles:
+    - common
+    - swap
+# AND DO SOMETHING

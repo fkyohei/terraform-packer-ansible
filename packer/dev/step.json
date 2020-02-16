@@ -1,0 +1,39 @@
+{
+    "builders" : [
+        {
+            "profile": "【 your original aws profile name 】",
+            "type" : "amazon-ebs",
+            "region" : "ap-northeast-1",
+            "source_ami_filter": {
+                "filters": {
+                    "virtualization-type": "hvm",
+                    "name": "amzn2-ami-hvm-*-x86_64-gp2",
+                    "root-device-type": "ebs"
+                },
+                "owners": ["amazon"],
+                "most_recent": true
+            },
+            "instance_type": "t3.nano",
+            "ssh_username": "ec2-user",
+            "ami_name": "DEV-STEP-SERVER-{{timestamp}}",
+            "tags": {
+                "Name": "DEV-STEP-SERVER-{{timestamp}}",
+                "Base_AMI_ID": "{{ .SourceAMI }}",
+                "Base_AMI_NAME": "{{ .SourceAMIName }}"
+            }
+        }
+    ],
+    "provisioners": [
+        {
+            "type" : "ansible",
+            "extra_arguments" : [
+                "-b",
+                "--ssh-extra-args",
+                "-o IdentitiesOnly=yes -o UserKnownHostsFile=/dev/null",
+                "--extra-vars",
+                "env_name=dev"
+            ],
+            "playbook_file" : "../../ansible/step_ami.yml"
+        }
+    ]
+}
